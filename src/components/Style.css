@@ -1,0 +1,155 @@
+/* -----------------------------------
+   IMPORT FONTS
+------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,500;0,600;0,700;1,400;1,600&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,500&display=swap');
+
+
+/* -----------------------------------
+   GLOBAL STYLES
+------------------------------------- */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f7f2;
+}
+
+
+/* -----------------------------------
+   CARD CONTAINER / BOX STYLES
+------------------------------------- */
+.cd {
+    border-radius: 16px;
+    margin-top: 20px;
+    height: 16rem;
+}
+
+.extra {
+    border-bottom: 1px solid rgba(17,17,17,0.449);
+}
+
+
+/* -----------------------------------
+   IMAGE BOX WITH CART BUTTON
+------------------------------------- */
+.image_box {
+    position: relative;
+}
+
+.cart_btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.cart_btn:hover {
+    background-color: #d9363e;
+}
+
+
+/* -----------------------------------
+   CARD TOP (upper section)
+------------------------------------- */
+.upper_data h4 {
+    font-size: 18px;
+    color: rgba(17,17,17,0.849);
+    letter-spacing: .5px;
+    font-weight: 800;
+}
+
+.upper_data span {
+    background-color: rgb(36,150,63);
+    border-radius: 6px;
+    color: #fff;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 2px 1px;
+    width: 45px;
+}
+
+
+/* -----------------------------------
+   CARD LOWER SECTION
+------------------------------------- */
+.lower_data h5 {
+    font-size: 15px;
+    letter-spacing: .4px;
+    font-weight: 100;
+    color: rgba(17,17,17,0.849);
+}
+
+.lower_data span {
+    font-size: 15px;
+    letter-spacing: .4px;
+    color: rgba(17,17,17,0.849);
+}
+
+
+/* -----------------------------------
+   LAST LINE INSIDE CARD (icons, text)
+------------------------------------- */
+.last_data .limg {       /* arrimg — small icon */
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+}
+
+.last_data p {
+    font-size: 14px;
+    margin-top: 5px;
+    letter-spacing: .2px;
+    color: rgba(17,17,17,0.849);
+}
+
+.last_data .laimg {      /* delimg — bigger icon */
+    width: 25px;
+    height: 20px;
+    margin-top: 5px;
+}
+
+
+/* -----------------------------------
+   HOVER EFFECTS
+------------------------------------- */
+.hove {
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.hove:hover {
+    box-shadow: 0 0 10px 2px rgba(0,0,0,0.1);
+    transition: .2s;
+}
+
+.title {
+    color: #1a1a1a;
+}
+
+
+/* -----------------------------------
+   RESPONSIVE (MOBILE)
+------------------------------------- */
+@media (max-width:600px) {
+
+    .con {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .last_data p {
+        font-size: 12px;
+    }
+
+    .zomato {
+        margin-top: 12px;
+        position: static;
+    }
+}
