@@ -1,101 +1,166 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Fooddata from './FoodData';
 import "./Style.css";
 import Form from 'react-bootstrap/Form';
 import Cards from './Cards';
 import Set from './Set';
 import Sidebar from './Sidebar';
+import { FaUserCircle, FaStar } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const Search = () => {
-    const [fdata, setFdata] = useState(Fooddata);
-    const [copydata, setCopyData] = useState([]);
-    const [selectedItem, setSelectedItem] = useState("");
+  const [copydata, setCopyData] = useState(Fooddata);
+  const [searchText, setSearchText] = useState("");
 
-    const changeData = (value) => {
-        let searchText = value.toLowerCase();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showContact, setShowContact] = useState(false);
+  const contactRef = useRef(null);
 
-        if (searchText === "") {
-            setCopyData(fdata);
-        } else {
-            let filtered = fdata.filter((ele) =>
-                ele.rname.toLowerCase().includes(searchText)
-            );
-            setCopyData(filtered);
-        }
+  const logo = "images/GrabFood – Logo.jpeg";
+  const navigate = useNavigate();
+
+  const handleTypingSearch = (value) => {
+    setSearchText(value);
+    applySearchFilter(value);
+  };
+
+  const handleSearchClick = () => {
+    applySearchFilter(searchText);
+  };
+
+  const applySearchFilter = (text) => {
+    const filtered = text.trim() === ""
+      ? Fooddata
+      : Fooddata.filter((item) =>
+          item.rname.toLowerCase().includes(text.toLowerCase())
+        );
+    setCopyData(filtered);
+  };
+
+  // Close contact dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (contactRef.current && !contactRef.current.contains(event.target)) {
+        setShowContact(false);
+      }
     };
-
-    const handleSelectChange = (e) => {
-        const value = e.target.value;
-        setSelectedItem(value);
-
-        if (value === "") {
-            setCopyData(fdata);
-        } else {
-            const filtered = fdata.filter((ele) =>
-                ele.rname.toLowerCase() === value.toLowerCase()
-            );
-            setCopyData(filtered);
-        }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, []);
 
-    const logo = "images/GrabFood – Logo.jpeg";
+  return (
+    <div style={{ display: "flex" }}>
+      {/* NAV BUTTON */}
+      <button className="nav-button" onClick={() => setSidebarOpen(true)}>☰</button>
 
-    useEffect(() => {
-        setTimeout(() => {
-            setCopyData(Fooddata);
-        }, 1000);
-    }, []);
+      {/* SIDEBAR */}
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-    return (
-        <div style={{ display: "flex" }}>
-            {/* LEFT SIDEBAR */}
-            <Sidebar />
+      {/* MAIN CONTENT */}
+      <div style={{ marginLeft: "20px", width: "100%" }}>
+        {/* HEADER */}
+        <div className="container d-flex justify-content-between align-items-center py-3">
+          <img src={logo} style={{ width: "5rem", cursor: "pointer" }} alt="logo" />
 
-            {/* MAIN CONTENT */}
-            <div style={{ marginLeft: "20px", width: "100%" }}>
-                <div className="container d-flex justify-content-between align-items-center">
-                    <img src={logo} style={{ width: "5rem", cursor: "pointer" }} alt="" />
-                    <div style={{ color: "#1b1464", cursor: "pointer" }} className="mt-3 d-flex gap-3">
-                        <button style={{ backgroundColor: "#f5f7f2", color: "black", border: "none", fontSize: "20px", cursor: "pointer" }}>Shops</button>
-                        <button style={{ backgroundColor: "#f5f7f2", color: "black", border: "none", fontSize: "20px", cursor: "pointer" }}>Offers</button>
-                        <button style={{ backgroundColor: "#f5f7f2", color: "black", border: "none", fontSize: "20px", cursor: "pointer" }}>Contact</button>
-                         
-                    </div>
+          <div className="d-flex align-items-center gap-4" style={{ color: "#1b1464", cursor: "pointer" }}>
+            <button
+             style={{ background: "transparent", border: "none", fontSize: "20px" }} onClick={() => navigate("/customer-service")}>
+                Customer Service
+            </button>
+
+
+            <button
+              style={{
+                background: "#f39c12",
+                border: "none",
+                fontSize: "18px",
+                color: "#fff",
+                padding: "8px 16px",
+                borderRadius: "25px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                cursor: "pointer",
+                fontWeight: "500"
+              }}
+              onClick={() => navigate("/offers")}
+            >
+              <FaStar color="#fff" /> Special Offers
+            </button>
+
+            <div style={{ position: "relative" }} ref={contactRef}>
+              <button
+                style={{ background: "transparent", border: "none", fontSize: "20px" }}
+                onClick={() => setShowContact(!showContact)}
+              >
+                Contact
+              </button>
+
+              {showContact && (
+                <div className="contact-dropdown" style={{
+                  position: "absolute",
+                  top: "40px",
+                  right: "0",
+                  background: "#fff",
+                  padding: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  zIndex: 10,
+                  width: "200px"
+                }}>
+                  <p>📞 +91 9786713699</p>
+                  <p>✉ mkfood@email.com</p>
                 </div>
-
-                {/* SEARCH BOX */}
-                <Form className='d-flex justify-content-center align-items-center mt-3'>
-                    <Form.Group className="mx-2 col-lg-4" controlId="formBasicEmail">
-                        <Form.Control
-                            type="text"
-                            onChange={(e) => changeData(e.target.value)}
-                            placeholder="Search your product from here"
-                        />
-                    </Form.Group>
-                    <button className='btn text-light col-lg-1' style={{ background: "#ed4c67" }}>
-                        Search
-                    </button>
-                </Form>
-
-                {/* CARDS SECTION */}
-                <section className='title'>
-                    <h2 className='px-4' style={{ fontWeight: 600, textAlign: "center"}}>
-                        Groceries Delivered in 90 Minutes
-                    </h2>
-                    <p style={{ textAlign: "center" }}>
-                        Get your healthy foods & snacks delivered at your doorsteps all day everyday
-                    </p>
-
-                    <div className="row mt-2 d-flex justify-content-around align-items-center">
-                        {copydata && copydata.length > 0
-                            ? <Cards data={copydata} />
-                            : <Set sdata={fdata} />}
-                    </div>
-                </section>
-                
+              )}
             </div>
+
+            <FaUserCircle
+              size={35}
+              color="#262348ff"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/login")}
+            />
+          </div>
         </div>
-    );
-}
+
+        {/* SEARCH */}
+        <Form className='d-flex justify-content-center align-items-center mt-3'
+              onSubmit={(e) => { e.preventDefault(); handleSearchClick(); }}>
+          <Form.Group className="mx-2 col-lg-4">
+            <Form.Control
+              type="text"
+              value={searchText}
+              onChange={(e) => handleTypingSearch(e.target.value)}
+              placeholder="Search your product from here"
+            />
+          </Form.Group>
+
+          <button className='btn text-light col-lg-1' style={{ background: "#ed4c67" }}
+                  onClick={handleSearchClick}>
+            Search
+          </button>
+        </Form>
+
+        {/* CARDS */}
+        <section className='title'>
+          <h2 className='px-4' style={{ fontWeight: 600, textAlign: "center" }}>
+            Groceries Delivered in 90 Minutes
+          </h2>
+          <p style={{ textAlign: "center" }}>
+            Get your healthy foods & snacks delivered at your doorsteps all day everyday
+          </p>
+
+          <div className="row mt-2 d-flex justify-content-around align-items-center">
+            {copydata.length > 0
+              ? <Cards data={copydata} />
+              : <Set sdata={Fooddata} />}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
 
 export default Search;

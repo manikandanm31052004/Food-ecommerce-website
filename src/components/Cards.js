@@ -5,19 +5,35 @@ import { useNavigate } from "react-router-dom";
 const Cards = ({ data }) => {
   const navigate = useNavigate();
 
-  // Get cart array from localStorage
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // Open product details page
+  // ADD TO CART FUNCTION
+  const addToCart = (item) => {
+    let cartData = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existing = cartData.find((i) => i.id === item.id);
+
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cartData.push({
+        ...item,
+        price: Number(item.price),
+        qty: 1
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cartData));
+  };
+
+  // Navigate to product page
   const openProductPage = (item) => {
-    navigate(`/product/${item.id}`, { state: item });
+    navigate(`/product/${item.id}`, { state: item });   // ✅ FIXED
   };
 
   return (
     <>
       {data.map((element) => {
-        
-        // Check if this product is already in cart
         const itemInCart = cart.find((i) => i.id === element.id);
 
         return (
@@ -27,19 +43,17 @@ const Cards = ({ data }) => {
             className="hove mb-4"
           >
             <div className="image_box">
-              <Card.Img
-                variant="top"
-                className="cd"
-                src={element.imgdata}
-              />
+              <Card.Img variant="top" className="cd" src={element.imgdata} />
 
-              {/* CART BUTTON */}
               <button
                 className="cart_btn"
-                onClick={() => openProductPage(element)}
+                onClick={() => {
+                  addToCart(element);
+                  openProductPage(element);
+                }}
               >
                 {itemInCart
-                  ? `Add to Cart (${itemInCart.qty})`
+                  ? `Add to Cart (${itemInCart.qty})`  // ✅ FIXED
                   : "Add to Cart"}
               </button>
             </div>
@@ -52,7 +66,7 @@ const Cards = ({ data }) => {
 
               <div className="lower_data d-flex justify-content-between">
                 <h5>{element.address}</h5>
-                <span>{element.price}</span>
+                <span>₹ {element.price}</span>
               </div>
 
               <div className="extra"></div>
